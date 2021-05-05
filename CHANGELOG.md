@@ -1,5 +1,5 @@
 ## [Unreleased]
-
-## [0.0.0]
 ### Added
 - Initial release
+
+## [0.0.0]
