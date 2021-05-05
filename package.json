@@ -21,7 +21,7 @@
     "scripts": {
         "build": "NODE_ENV=production rollup -c",
         "build:watch": "NODE_ENV=development rollup -c --watch",
-        "prepublishOnly": "agadoo"
+        "release": "release-it"
     },
     "files": [
         "dist"
@@ -52,6 +52,7 @@
         "eslint-plugin-react": "^7.21.5",
         "eslint-plugin-react-hooks": "^1.7.0",
         "jest": "^26.6.3",
+        "release-it": "^14.6.1",
         "rollup": "^2.46.0",
         "rollup-plugin-analyzer": "^4.0.0",
         "rollup-plugin-delete": "^2.0.0",
