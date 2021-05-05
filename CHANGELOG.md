@@ -1,4 +1,4 @@
-## [UNRELEASED]
+## [Unreleased]
 ### Fixed
 - Fix missing `direction`
 
