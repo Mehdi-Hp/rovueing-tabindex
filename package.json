@@ -1,7 +1,7 @@
 {
     "name": "rovueing-tabindex",
     "packageName": "rovueing-tabindex",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "Add a roving tabindex to a Vue component",
     "license": "WTFPL",
     "author": "Mehdi Hoseini Pajooh <mhhhhp@proton.me>",
