@@ -1274,6 +1274,13 @@
   dependencies:
     "@octokit/openapi-types" "^7.0.0"
 
+"@release-it/keep-a-changelog@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@release-it/keep-a-changelog/-/keep-a-changelog-2.2.2.tgz#16896c4c25978993886fa0b0cfcbceb31c53a27d"
+  integrity sha512-fFHtjKcnxA2bE0jVBFTFSQq2U4bPqL1EhRx9kDl+fzAXqERjEazcvrrp6fk2LaVRSID4L0IPKQ4KyOBJGf0Y3g==
+  dependencies:
+    detect-newline "^3.1.0"
+
 "@rollup/plugin-babel@^5.3.0":
   version "5.3.0"
   resolved "https://registry.npmjs.org/@rollup/plugin-babel/-/plugin-babel-5.3.0.tgz"
@@ -2525,7 +2532,7 @@ deprecation@^2.0.0, deprecation@^2.3.1:
   resolved "https://registry.npmjs.org/deprecation/-/deprecation-2.3.1.tgz"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
-detect-newline@^3.0.0:
+detect-newline@^3.0.0, detect-newline@^3.1.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/detect-newline/-/detect-newline-3.1.0.tgz"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
