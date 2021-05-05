@@ -14,6 +14,9 @@ yarn add rovueing-tabindex
 pnpm add rovueing-tabindex
 ```
 
+## Demo 
+![](./demo.gif)
+
 ## Usage
 
 ```javascript
@@ -26,12 +29,12 @@ app.use(RovueingTabindex, {
 
 ```vue
 <template>
-    <select id="foods" v-rove>
-        <option value="frittata" v-rove-focusable>Frittata</option>
-        <option value="carbonara" v-rove-focusable>Carbonara</option>
-        <option value="lamb-chops" v-rove-focusable>Lamb Chops</option>
-        <option value="chow-mein" v-rove-focusable>Chow Mein</option>
-    </select>
+    <ul id="foods" v-rove>
+        <button v-rove-focusable>Frittata</button>
+        <button v-rove-focusable>Carbonara</button>
+        <button v-rove-focusable>Lamb Chops</button>
+        <button v-rove-focusable>Chow Mein</button>
+    </ul>
 </template>
 ```
 

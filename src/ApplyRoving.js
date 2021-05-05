@@ -26,8 +26,8 @@ export function ApplyRove({
         prevKeys.push('ArrowRight');
         nextKeys.push('ArrowLeft');
     } else {
-        prevKeys.push('ArrowRight');
-        nextKeys.push('ArrowLeft');
+        prevKeys.push('ArrowLeft');
+        nextKeys.push('ArrowRight');
     }
     function makePrevFocusable() {
         if (focusableRove.value === 0) {
