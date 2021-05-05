@@ -1,0 +1,18 @@
+{
+    "git": {
+        "commitMessage": ":bookmark: Release v${version}"
+    },
+    "github": {
+        "release": true
+    },
+    "hooks": {
+        "before:init": [
+            "yarn run build"
+        ]
+    },
+    "plugins": {
+        "@release-it/keep-a-changelog": {
+            "filename": "CHANGELOG.md"
+        }
+    }
+}
