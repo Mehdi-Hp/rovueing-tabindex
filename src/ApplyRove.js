@@ -1,4 +1,6 @@
-import { ref, watch, computed } from 'vue';
+import {
+    ref, unref, watch, computed
+} from 'vue';
 import { getKeyboardFocusableElements } from './_helpers';
 
 export function ApplyRove({
@@ -9,6 +11,14 @@ export function ApplyRove({
     const focusableRoveElm = computed(() => {
         return roves[focusableRove.value];
     });
+
+    if (unref(disabled)) {
+        roves.forEach((rove, index) => {
+            return rove.setAttribute('tabindex', '0');
+        });
+        return;
+    }
+
     watch(focusableRove, () => {
         roves.forEach((rove, index) => {
             if (focusableRove.value === index) {

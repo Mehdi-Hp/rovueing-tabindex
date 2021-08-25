@@ -1,4 +1,4 @@
-import { ApplyRove } from './ApplyRoving';
+import { ApplyRove } from './ApplyRove';
 
 export const RovueingTabindex = {
     install(app, { direction = 'ltr' } = {}) {
@@ -26,9 +26,17 @@ export const RovueingTabindex = {
                     roveMap
                 });
             },
-            updated(el) {
-                const { observer, observerConfig } = roveMap.get(el);
+            updated(el, { value = true, modifiers: { rtl = direction === 'rtl' } }) {
+                const { observer, observerConfig, removeEventListener } = roveMap.get(el);
+                observer.disconnect();
+                removeEventListener();
                 observer.observe(el, observerConfig);
+                ApplyRove({
+                    element: el,
+                    disabled: !value,
+                    isRTL: rtl,
+                    roveMap
+                });
             },
             unmounted(el) {
                 const { observer, removeEventListener } = roveMap.get(el);
