@@ -1,3 +1,7 @@
+## [Unreleased]
+### Fixed
+- Fix `disabled` option not working
+
 ## [0.0.2] - 2021-05-05
 ### Fixed
 - Fix missing `direction`
