@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.0.0] - 2021-08-25
 ### Fixed
 - Fix `disabled` option not working
 
