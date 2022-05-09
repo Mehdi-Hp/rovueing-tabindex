@@ -1,3 +1,6 @@
+## [Unreleased]
+- Complete rewrite. Better performance and less bugs.
+
 ## [1.0.0] - 2021-08-25
 ### Fixed
 - Fix `disabled` option not working
