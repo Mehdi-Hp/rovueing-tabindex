@@ -1,112 +1,149 @@
-import {
-    ref, unref, watch, computed
-} from 'vue';
-import { getKeyboardFocusableElements } from './_helpers';
+import { ref, unref, watch } from 'vue';
+import { getRoveFocusables } from './_helpers';
+
+
+const previousKeys = new Set(['ArrowUp']);
+const nextKeys = new Set(['ArrowDown']);
+const endKeys = new Set(['End']);
+const homeKeys = new Set(['Home']);
 
 export function ApplyRove({
-    element, disabled, isRTL, roveMap
+    element, disabled, isRTL, roveMap, autoFocus, updateMode
 }) {
-    const roves = getKeyboardFocusableElements(element);
-    const focusableRove = ref(0);
-    const focusableRoveElm = computed(() => {
-        return roves[focusableRove.value];
-    });
+    const roves = getRoveFocusables(element);
 
+    if (roves.length === 0) {
+        throw new Error('No rove focusables found');
+    }
     if (unref(disabled)) {
-        roves.forEach((rove, index) => {
+        roves.forEach((rove) => {
             return rove.setAttribute('tabindex', '0');
         });
         return;
     }
-
-    watch(focusableRove, () => {
-        roves.forEach((rove, index) => {
-            if (focusableRove.value === index) {
-                return rove.setAttribute('tabindex', '0');
-            }
-            return rove.setAttribute('tabindex', '-1');
-        });
-    }, { immediate: true });
-
-    const prevKeys = ['ArrowUp'];
-    const nextKeys = ['ArrowDown'];
-    const endKeys = ['End'];
-    const homeKeys = ['Home'];
     if (isRTL) {
-        prevKeys.push('ArrowRight');
-        nextKeys.push('ArrowLeft');
+        previousKeys.add('ArrowRight');
+        nextKeys.add('ArrowLeft');
     } else {
-        prevKeys.push('ArrowLeft');
-        nextKeys.push('ArrowRight');
+        previousKeys.add('ArrowLeft');
+        nextKeys.add('ArrowRight');
     }
-    function makePrevFocusable() {
-        if (focusableRove.value === 0) {
-            focusableRove.value = roves.length - 1;
-        } else {
-            focusableRove.value -= 1;
-        }
-    }
-    function makeNextFocusable() {
-        if (focusableRove.value === roves.length - 1) {
-            focusableRove.value = 0;
-        } else {
-            focusableRove.value += 1;
-        }
-    }
-    function handleKeydown(event) {
-        if (prevKeys.includes(event.key)) {
-            event.preventDefault();
-            makePrevFocusable();
-        }
-        if (nextKeys.includes(event.key)) {
-            event.preventDefault();
-            makeNextFocusable();
-        }
-        if (homeKeys.includes(event.key)) {
-            event.preventDefault();
-            focusableRove.value = 0;
-        }
-        if (endKeys.includes(event.key)) {
-            event.preventDefault();
-            focusableRove.value = roves.length - 1;
-        }
-    }
-    function handleFocus(event) {
-        focusableRoveElm.value.addEventListener('keydown', handleKeydown);
-    }
-    function handleBlur(event) {
-        focusableRoveElm.value.removeEventListener('keydown', handleKeydown);
-    }
-    watch(focusableRoveElm, (newFocusableRoveElm, oldFocusableRoveElm) => {
-        newFocusableRoveElm?.addEventListener('focus', handleFocus);
-        newFocusableRoveElm?.addEventListener('blur', handleBlur);
-        oldFocusableRoveElm?.removeEventListener('focus', handleFocus);
-        oldFocusableRoveElm?.removeEventListener('blur', handleBlur);
-        oldFocusableRoveElm?.blur();
-        newFocusableRoveElm?.focus();
-    }, { immediate: true });
 
-    function handleClick(clickedRove) {
-        roves.forEach((rove, index) => {
-            return rove.setAttribute('tabindex', '-1');
-        });
-        return clickedRove.setAttribute('tabindex', '0');
+    const isFocusedInside = ref(false);
+    if (checkIfIsFocusedInside()) {
+        isFocusedInside.value = true;
     }
-    function removeEventListener() {
-        roves.forEach((rove) => {
-            rove.removeEventListener('click', handleClick);
-            rove.removeEventListener('keydown', handleKeydown);
-            rove.removeEventListener('focus', handleFocus);
-            rove.removeEventListener('blur', handleBlur);
+    const toReceiveFocus = ref(findBestRoveToFocus());
+
+    element.addEventListener('focusin', handleFocusIn, true);
+    element.addEventListener('focusout', handleFocusOut, true);
+    element.addEventListener('keydown', handleKeydown, true);
+
+    function checkIfIsFocusedInside() {
+        const focused = document.activeElement;
+        const alreadyFocusedRove = roves.find((rove) => {
+            return rove.contains(focused);
         });
+        return Boolean(alreadyFocusedRove);
     }
-    roves.forEach((rove, index) => {
-        rove.addEventListener('click', (event) => {
-            handleClick(rove);
+    function findBestRoveToFocus() {
+        const focused = document.activeElement;
+        if (focused) {
+            const alreadyFocusedRove = roves.find((rove) => {
+                return rove.contains(focused);
+            });
+            if (alreadyFocusedRove) {
+                return roves.indexOf(alreadyFocusedRove);
+            }
+            const checkedRoves = roves.filter((rove) => {
+                return rove.checked;
+            });
+            if (checkedRoves.length === 1) {
+                return roves.indexOf(checkedRoves[0]);
+            }
+        }
+        return 0;
+    }
+    function handleFocusIn(event) {
+        if (!isFocusedInside.value) {
+            const hasCheckedRove = roves.some((rove) => {
+                return rove.checked;
+            });
+            if (hasCheckedRove) {
+                toReceiveFocus.value = roves.findIndex((rove) => {
+                    return rove.checked;
+                });
+            }
+        }
+        isFocusedInside.value = true;
+    }
+    function handleFocusOut(event) {
+        const isAllOut = !roves.some((rove) => {
+            return rove.contains(event.relatedTarget);
         });
-    });
+        if (isAllOut) {
+            isFocusedInside.value = false;
+        }
+    }
+
+    function handleKeydown(event) {
+        if (previousKeys.has(event.key)) {
+            event.preventDefault();
+            if (toReceiveFocus.value === 0) {
+                toReceiveFocus.value = roves.length - 1;
+            } else {
+                toReceiveFocus.value -= 1;
+            }
+        }
+        if (nextKeys.has(event.key)) {
+            event.preventDefault();
+            if (toReceiveFocus.value === roves.length - 1) {
+                toReceiveFocus.value = 0;
+            } else {
+                toReceiveFocus.value += 1;
+            }
+        }
+        if (endKeys.has(event.key)) {
+            event.preventDefault();
+            toReceiveFocus.value = roves.length - 1;
+        }
+        if (homeKeys.has(event.key)) {
+            event.preventDefault();
+            toReceiveFocus.value = 0;
+        }
+    }
+
+    const stopToReceiveFocusWatcher = watch(
+        toReceiveFocus,
+        () => {
+            roves.forEach((rove, roveIndex) => {
+                if (toReceiveFocus.value === roveIndex) {
+                    rove.setAttribute('tabindex', '0');
+                    if (isFocusedInside.value) {
+                        rove.focus();
+                    }
+                    if (autoFocus && !isFocusedInside.value) {
+                        rove.focus();
+                    }
+                } else {
+                    rove.setAttribute('tabindex', '-1');
+                }
+            });
+        },
+        {
+            immediate: true
+        }
+    );
+
+
+    function removeEventListeners() {
+        element.removeEventListener('focusin', handleFocusIn);
+        element.removeEventListener('focusout', handleFocusOut);
+        element.removeEventListener('keydown', handleKeydown);
+        stopToReceiveFocusWatcher();
+    }
     roveMap.set(element, {
         ...roveMap.get(element),
-        removeEventListener
+        removeEventListeners
     });
 }

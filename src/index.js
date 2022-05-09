@@ -1,59 +1,78 @@
 import { ApplyRove } from './ApplyRove';
 
+
 export const RovueingTabindex = {
     install(app, { direction = 'ltr' } = {}) {
         const roveMap = new WeakMap();
         app.directive('rove', {
-            created(el, { value = true, modifiers: { rtl = direction === 'rtl' } }) {
+            created(element, { value = true, modifiers }) {
+                const resolvedModifiers = {
+                    rtl: modifiers.rtl || direction === 'rtl',
+                    autoFocus: modifiers.autoFocus || false
+                };
                 const observer = new MutationObserver(() => {
                     ApplyRove({
-                        element: el,
+                        element,
                         disabled: !value,
-                        isRTL: rtl,
-                        roveMap
+                        isRTL: resolvedModifiers.rtl,
+                        autoFocus: resolvedModifiers.autoFocus,
+                        roveMap,
+                        updateMode: false
                     });
                 });
                 const observerConfig = { attributes: false, childList: true };
-                roveMap.set(el, { observer, observerConfig });
+                roveMap.set(element, { observer, observerConfig });
             },
-            mounted(el, { value = true, modifiers: { rtl = direction === 'rtl' } }) {
-                const { observer, observerConfig } = roveMap.get(el);
-                observer.observe(el, observerConfig);
+            async mounted(element, { value = true, modifiers }) {
+                const resolvedModifiers = {
+                    rtl: modifiers.rtl || direction === 'rtl',
+                    autoFocus: modifiers.autoFocus || false
+                };
+                const { observer, observerConfig } = roveMap.get(element);
+                observer.observe(element, observerConfig);
                 ApplyRove({
-                    element: el,
+                    element,
                     disabled: !value,
-                    isRTL: rtl,
-                    roveMap
+                    isRTL: resolvedModifiers.rtl,
+                    autoFocus: resolvedModifiers.autoFocus,
+                    roveMap,
+                    updateMode: false
                 });
             },
-            updated(el, { value = true, modifiers: { rtl = direction === 'rtl' } }) {
-                const { observer, observerConfig, removeEventListener } = roveMap.get(el);
+            updated(element, { value = true, modifiers }) {
+                const resolvedModifiers = {
+                    rtl: modifiers.rtl || direction === 'rtl',
+                    autoFocus: modifiers.autoFocus || false
+                };
+                const { observer, observerConfig, removeEventListeners } = roveMap.get(element);
                 observer.disconnect();
-                removeEventListener();
-                observer.observe(el, observerConfig);
+                removeEventListeners();
+                observer.observe(element, observerConfig);
                 ApplyRove({
-                    element: el,
+                    element,
                     disabled: !value,
-                    isRTL: rtl,
-                    roveMap
+                    isRTL: resolvedModifiers.rtl,
+                    autoFocus: resolvedModifiers.autoFocus,
+                    roveMap,
+                    updateMode: true
                 });
             },
-            unmounted(el) {
-                const { observer, removeEventListener } = roveMap.get(el);
-                removeEventListener();
+            unmounted(element) {
+                const { observer, removeEventListeners } = roveMap.get(element);
+                removeEventListeners();
                 observer.disconnect();
-                roveMap.delete(el);
+                roveMap.delete(element);
             }
         });
         app.directive('rove-focusable', {
-            mounted(el) {
-                el.setAttribute('data-v-rove-focusable', '');
+            mounted(element) {
+                element.dataset.vRoveFocusable = '';
             },
-            updated(el) {
-                el.setAttribute('data-v-rove-focusable', '');
+            updated(element) {
+                element.dataset.vRoveFocusable = '';
             },
-            unmounted(el) {
-                el.removeAttribute('data-v-rove-focusable');
+            unmounted(element) {
+                delete element.dataset.vRoveFocusable;
             }
         });
     }

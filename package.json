@@ -75,5 +75,8 @@
         "keyboard",
         "a11y",
         "accessibility"
-    ]
+    ],
+    "dependencies": {
+        "@vueuse/core": "^8.4.2"
+    }
 }

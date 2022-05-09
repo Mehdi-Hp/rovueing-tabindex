@@ -5,6 +5,9 @@ module.exports = {
     globals: {
         'MutationObserver': 'readonly'
     },
+    env: {
+        browser: true
+    },
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -30,6 +33,7 @@ module.exports = {
         'max-len': 'off',
         'no-multiple-empty-lines': ['error', { 'max': 2 }],
         'arrow-body-style': ['error', 'always'],
-        'import/prefer-default-export': 'off'
+        'import/prefer-default-export': 'off',
+        'no-use-before-define': 'off'
     }
 };
