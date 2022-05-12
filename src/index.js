@@ -47,7 +47,7 @@ export const RovueingTabindex = {
                 };
                 const { observer, observerConfig, removeEventListeners } = roveMap.get(element);
                 observer.disconnect();
-                removeEventListeners();
+                removeEventListeners?.();
                 observer.observe(element, observerConfig);
                 ApplyRove({
                     element,
@@ -60,7 +60,7 @@ export const RovueingTabindex = {
             },
             unmounted(element) {
                 const { observer, removeEventListeners } = roveMap.get(element);
-                removeEventListeners();
+                removeEventListeners?.();
                 observer.disconnect();
                 roveMap.delete(element);
             }
