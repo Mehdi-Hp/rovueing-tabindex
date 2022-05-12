@@ -13,10 +13,12 @@ export function ApplyRove({
     const roves = getRoveFocusables(element);
     const isTouchedByRovueing = ref(false);
 
-    if (unref(disabled) && isTouchedByRovueing.value) {
-        roves.forEach((rove) => {
-            return rove.setAttribute('tabindex', '0');
-        });
+    if (unref(disabled)) {
+        if (isTouchedByRovueing.value) {
+            roves.forEach((rove) => {
+                return rove.setAttribute('tabindex', '0');
+            });
+        }
         return;
     }
 
