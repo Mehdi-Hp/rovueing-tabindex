@@ -1,3 +1,6 @@
+## [Unreleased]
+- Do not touch anything if is disabled from the start
+
 ## [2.0.0] - 2022-05-09
 - Complete rewrite. Better performance and less bugs.
 
