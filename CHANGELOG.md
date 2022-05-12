@@ -1,3 +1,6 @@
+## [Unreleased]
+-  Fix some minor bugs
+-  
 ## [2.0.2] - 2022-05-12
 - Do not touch anything if is disabled from the start (#2)
 - 
