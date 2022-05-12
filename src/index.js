@@ -24,6 +24,7 @@ export const RovueingTabindex = {
                 roveMap.set(element, { observer, observerConfig });
             },
             async mounted(element, { value = true, modifiers }) {
+                debugger;
                 const resolvedModifiers = {
                     rtl: modifiers.rtl || direction === 'rtl',
                     autoFocus: modifiers.autoFocus || false
