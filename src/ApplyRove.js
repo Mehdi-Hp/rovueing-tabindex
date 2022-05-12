@@ -11,15 +11,19 @@ export function ApplyRove({
     element, disabled, isRTL, roveMap, autoFocus, updateMode
 }) {
     const roves = getRoveFocusables(element);
+    const isTouchedByRovueing = ref(false);
 
-    if (roves.length === 0) {
-        throw new Error('No rove focusables found');
-    }
-    if (unref(disabled)) {
+    if (unref(disabled) && isTouchedByRovueing.value) {
         roves.forEach((rove) => {
             return rove.setAttribute('tabindex', '0');
         });
         return;
+    }
+
+    isTouchedByRovueing.value = true;
+
+    if (roves.length === 0) {
+        throw new Error('No rove focusables found');
     }
     if (isRTL) {
         previousKeys.add('ArrowRight');
